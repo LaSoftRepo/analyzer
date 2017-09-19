@@ -17,22 +17,40 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles import views
+from django.shortcuts import render
 from rest_framework import routers
 
+# from analyzer.users.views import UserViewSet
+from rest_framework.reverse import reverse_lazy
+from rest_framework_swagger.views import get_swagger_view
+from users.views import UserViewSet
+
+schema_view = get_swagger_view(title='Parser API')
+
 router = routers.DefaultRouter()
-# router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet, base_name='users')
 
 v1_0_patterns = [
-    # url(r'^geo/', include('geo.urls', namespace='geo')),
+    url(r'^rest-auth/', include('rest_auth.urls')),
 ]
+v1_0_patterns += router.urls
+
+@login_required
+def index(request):
+    # print(reverse_lazy('users'))
+    return render(request, 'index.html', {})
 
 urlpatterns = [
-    url(r'^v1.0/', include(v1_0_patterns, namespace='v1.0')),
+    url(r'^$', index),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^api/v1.0/', include(v1_0_patterns, namespace='v1.0')),
     url(r'^admin/', admin.site.urls),
-    url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework'))
+                               namespace='rest_framework')),
+    url(r'^swagger$', schema_view)
+
 ]
 
 urlpatterns += [

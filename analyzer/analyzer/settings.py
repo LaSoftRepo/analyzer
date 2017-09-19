@@ -40,6 +40,13 @@ INSTALLED_APPS = [
 
     # origin
     'rest_framework',
+    # 'rest_auth',
+    'rest_framework_swagger',
+    # 'rest_framework.authtoken',
+
+    # own
+    'users',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -151,13 +158,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_PAGINATION_CLASS':
-        'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 30,
+        'core.pagination.CustomPagination',
+    'PAGE_SIZE': 10,
 }
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 try:
     from local_settings import *

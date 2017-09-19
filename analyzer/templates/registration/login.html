@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <form class="form-signin" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <label for="inputEmail" class="sr-only">Username</label>
+            <input id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="" type="text">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input id="inputPassword" name="password" class="form-control" placeholder="Password" required="" type="password">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+    </div>
+{% endblock content %}
