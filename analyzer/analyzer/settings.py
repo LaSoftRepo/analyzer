@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # own
     'users',
     'core',
+    'jsx_compiler',
 ]
 
 MIDDLEWARE = [
@@ -168,6 +169,17 @@ REST_FRAMEWORK = {
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+JSX_COMPILER = {
+    # Default path 'static/js/src'. Path to compiled js file.
+    # 'SRC_PATH': os.path.join(BASE_DIR, 'static/js/src'),
+
+    # required - TMP_PATH. path to jsx files
+    'TMP_PATH': os.path.join(BASE_DIR, 'static/js/templates'),
+
+    # default True, compile jsx to js every time after restart server
+    # 'AUTO_COMPILE': True
+}
 
 try:
     from local_settings import *
