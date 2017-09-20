@@ -23,6 +23,9 @@ class JsxCompiler:
         except KeyError:
             raise KeyError('TMP_PATH key must be defined in JSX_COMPILER')
 
+    def get_compiled_files(self):
+        return os.listdir(self.src_path)
+
     def compile(self):
         files = os.listdir(self.tmp_path)
         for file in files:
@@ -36,11 +39,13 @@ class JsxCompiler:
     def _transform_jsx_to_js(self, lines, js_file_path):
         for i, line in enumerate(lines):
             line = line.replace('\n', '')
-            if i:
-                if ';' in line:
-                    line = line.replace(';', '')
-                    self.end_line = ';'
-                line = ''.join(('\'', line, '\'', self.end_line, '\n'))
+            if 'var' not in line:
+                if line:
+                    if ';' == line[-1]:
+                        line = line.replace(';', '')
+                        self.end_line = ';'
+                    line = ''.join(('\'', line, '\'', self.end_line, '\n'))
+                    self.end_line = '+'
             else:
                 line = ''.join((line, '\n'))
 
