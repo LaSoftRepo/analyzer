@@ -4,13 +4,13 @@ var parserApp = angular.module('parserApp', ['ngRoute', 'ngSanitize', 'angular-l
 
 parserApp.config(function($routeProvider) {
     $routeProvider
-    .when("/admin", {
-        template : adminTmp,
-        controller : "administratorAppController"
-    })
     .when("/", {
         template : parserTmp,
         // controller : "administratorAppController"
+    })
+    .when("/admin", {
+        template : adminTmp,
+        controller : "administratorAppController"
     })
     .when("/admin/create", {
         template : adminCreateTmp,
@@ -38,11 +38,29 @@ parserApp.controller("administratorAppController", function($scope, $location, $
     $scope.complete = function () {
         cfpLoadingBar.complete();
     };
-    $http.get('api/v1.0/users')
+
+    $scope.count_paginator = function(num) {
+        range = [];
+        for (var i = 1; i <= num; ++i){
+            range.push(i)
+        }
+        return range
+    };
+
+    $scope.get_users = function (page) {
+        var page_number = page || 1;
+        $http.get('api/v1.0/users?page='+page_number)
         .then(function(response) {
             $scope.users = response.data.results;
             $scope.total_pages = response.data.total_pages;
-    });
+            $scope.users_count = response.data.count;
+            $scope.current_page = response.data.current_page;
+        });
+    };
+
+    $scope.get_users();
+
+
 });
 
 parserApp.controller("administratorCreateAppController", function($scope, $location, $http, cfpLoadingBar) {
@@ -83,4 +101,9 @@ parserApp.controller("administratorCreateAppController", function($scope, $locat
                 $scope.status = response.status;
             });
     };
+});
+
+parserApp.controller("currentLocationAppController", function($scope, $location, $http, cfpLoadingBar) {
+    // console.log($location.url())
+    $scope.$location = $location;
 });

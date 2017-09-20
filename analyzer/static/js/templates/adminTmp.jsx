@@ -9,7 +9,7 @@ var adminTmp =
            <table class="table">
               <thead>
                    <tr>
-                       <th>#</th>
+                       <th>ID</th>
                        <th>First Name</th>
                        <th>Last Name</th>
                       <th>Username</th>
@@ -27,22 +27,10 @@ var adminTmp =
                </tbody>
            </table>
        </div>
-       <nav>
+       <nav ng-if="users_count > 10">
            <ul class="pagination">
-               <li class="page-item">
-                   <a class="page-link" href="#" aria-label="Previous">
-                       <span aria-hidden="true">&laquo;</span>
-                       <span class="sr-only">Previous</span>
-                   </a>
-               </li>
-               <li class="page-item"><a class="page-link" href="#">1</a></li>
-               <li class="page-item"><a class="page-link" href="#">2</a></li>
-               <li class="page-item"><a class="page-link" href="#">3</a></li>
-               <li class="page-item">
-                   <a class="page-link" href="#" aria-label="Next">
-                       <span aria-hidden="true">&raquo;</span>
-                       <span class="sr-only">Next</span>
-                   </a>
+               <li class="page-item" ng-class="{active: current_page == pages}" ng-repeat="pages in count_paginator(total_pages)">
+                   <a class="page-link" href="" ng-click="get_users(pages)">{{pages}}</a>
                </li>
            </ul>
        </nav>
@@ -58,38 +46,38 @@ var adminCreateTmp =
     <div class="table-responsive">
     <div class="form-group row">
        <div class="col-9">
-           <input ng-model="user.first_name" class="form-control" type="text" placeholder="First Name" id="example-text-input">
+           <input ng-model="user.first_name" class="form-control" type="text" placeholder="First Name" id="example-text-input" />
        </div>
     </div>
     <div class="form-group row">
        <div class="col-9">
-           <input ng-model="user.last_name" class="form-control" type="text" placeholder="Second Name" id="example-text-input">
+           <input ng-model="user.last_name" class="form-control" type="text" placeholder="Second Name" id="example-text-input" />
        </div>
     </div>
     <div class="form-group row">
        <div class="col-9">
            <i class="text-danger" ng-if="error_username">{{error_username}}</i>
-           <input ng-model="user.username" class="form-control" type="text" placeholder="Username" id="example-text-input">
+           <input ng-model="user.username" class="form-control" type="text" placeholder="Username" id="example-text-input" />
        </div>
     </div>
     <div class="form-group row">
        <div class="col-9">
            <i class="text-danger" ng-if="error_email">{{error_email}}</i>
-           <input ng-model="user.email" class="form-control" type="text" placeholder="Email" id="example-text-input">
+           <input ng-model="user.email" class="form-control" type="text" placeholder="Email" id="example-text-input" />
        </div>
     </div>
     <div class="form-group row">
        <div class="col-9">
            <i class="text-danger" ng-if="error_password">{{error_password}}</i>
-           <input ng-model="user.password" class="form-control" type="text" placeholder="Password" id="example-text-input">
+           <input ng-model="user.password" class="form-control" type="text" placeholder="Password" id="example-text-input" />
        </div>
     </div>
     <div class="form-group row">
        <div class="col-9">
-           <i class="text-danger" ng-if="error_password || error_password2">{{error_password || error_password2}}</i>
-           <input ng-model="user.password2" class="form-control" type="text" placeholder="Confirm Password" id="example-text-input">
+           <i class="text-danger" ng-if="error_password || error_password2"> {{error_password || error_password2}} </i>
+           <input ng-model="user.password2" class="form-control" type="text" placeholder="Confirm Password" id="example-text-input" />
        </div>
     </div>
-    <input ng-click="save()" type="submit" value="Save" class="btn btn-success">
+        <input ng-click="save()" type="submit" value="Save" class="btn btn-success" />
     </div>
     </div>;
