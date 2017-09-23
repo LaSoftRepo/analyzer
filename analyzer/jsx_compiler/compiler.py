@@ -32,7 +32,7 @@ class JsxCompiler:
             if file.endswith('jsx'):
                 file_path = '/'.join((self.tmp_path, file))
                 js_file_path = self._create_file(file)
-                with open(file_path, 'r') as f:
+                with open(file_path, 'r', encoding='utf8') as f:
                     lines = f.readlines()
                     self._transform_jsx_to_js(lines, js_file_path)
 
@@ -52,14 +52,14 @@ class JsxCompiler:
             self._save_file(line, js_file_path)
 
     def _save_file(self, line, path):
-        with open(path, 'a') as f:
+        with open(path, 'a', encoding='utf8') as f:
             f.writelines(line)
 
     def _create_file(self, name):
         name = name.split('.')[0] + self.suffix
         path = '/'.join((self.src_path, name))
         try:
-            with open(path, 'w') as f:
+            with open(path, 'w', encoding='utf8') as f:
                 pass
         except FileNotFoundError:
             os.mkdir(self.src_path)
