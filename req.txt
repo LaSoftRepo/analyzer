@@ -10,6 +10,7 @@ django-celery-beat==1.0.1
 django-rest-auth==0.9.1
 django-rest-swagger==2.1.2
 djangorestframework==3.6.4
+gunicorn==19.7.1
 idna==2.6
 itypes==1.1.0
 Jinja2==2.9.6
