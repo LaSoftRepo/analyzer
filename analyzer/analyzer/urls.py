@@ -25,12 +25,16 @@ from rest_framework import routers
 # from analyzer.users.views import UserViewSet
 from rest_framework.reverse import reverse_lazy
 from rest_framework_swagger.views import get_swagger_view
+
+from collection.views import CollectionsViewSet
+from parser_olx.views import parse
 from users.views import UserViewSet
 
 schema_view = get_swagger_view(title='Parser API')
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, base_name='users')
+router.register(r'collections', CollectionsViewSet, base_name='collections')
 
 v1_0_patterns = [
     url(r'^rest-auth/', include('rest_auth.urls')),
@@ -44,6 +48,7 @@ def index(request):
 
 urlpatterns = [
     url(r'^$', index),
+    url(r'^parse$', parse),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^api/v1.0/', include(v1_0_patterns, namespace='v1.0')),
     url(r'^admin/', admin.site.urls),
