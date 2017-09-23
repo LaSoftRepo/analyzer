@@ -6,6 +6,7 @@ from jsx_compiler.compiler import JsxCompiler
 
 register = template.Library()
 
+
 @register.simple_tag(name='compiled_js')
 def compiled_js():
     files = JsxCompiler().get_compiled_files()

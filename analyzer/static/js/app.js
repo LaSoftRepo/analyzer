@@ -6,7 +6,7 @@ parserApp.config(function($routeProvider) {
     $routeProvider
     .when("/", {
         template : parserTmp,
-        // controller : "administratorAppController"
+        controller : "collectionAppController"
     })
     .when("/admin", {
         template : adminTmp,
@@ -29,6 +29,37 @@ angular.module('parserApp')
         cfpLoadingBarProvider.includeSpinner = true;
     });
 
+parserApp.controller("collectionAppController", function($scope, $location, $http, cfpLoadingBar) {
+    $scope.start = function () {
+        cfpLoadingBar.start();
+    };
+
+    $scope.complete = function () {
+        cfpLoadingBar.complete();
+    };
+
+    $scope.count_paginator = function(num) {
+        range = [];
+        for (var i = 1; i <= num; ++i){
+            range.push(i)
+        }
+        return range
+    };
+
+    $scope.get_collection = function (page) {
+        var page_number = page || 1;
+        $http.get('api/v1.0/collections/?page='+page_number)
+        .then(function(response) {
+            $scope.collections = response.data.results;
+            $scope.total_pages = response.data.total_pages;
+            $scope.collection_count = response.data.count;
+            $scope.current_page = response.data.current_page;
+        });
+    };
+
+    $scope.get_collection();
+});
+
 parserApp.controller("administratorAppController", function($scope, $location, $http, cfpLoadingBar) {
 
     $scope.start = function () {
@@ -49,7 +80,7 @@ parserApp.controller("administratorAppController", function($scope, $location, $
 
     $scope.get_users = function (page) {
         var page_number = page || 1;
-        $http.get('api/v1.0/users?page='+page_number)
+        $http.get('api/v1.0/users/?page='+page_number)
         .then(function(response) {
             $scope.users = response.data.results;
             $scope.total_pages = response.data.total_pages;
