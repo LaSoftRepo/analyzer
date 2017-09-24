@@ -155,7 +155,6 @@ class ParserOlx(ConfigParserOlx):
 
     def _get_title(self, article):
         title = ''.join(article.get_text(self.TITLE))
-        print(title, 'ddd')
         if title:
             return title.replace('\n', '').strip(' ')
         else:
@@ -182,7 +181,6 @@ class ParserOlx(ConfigParserOlx):
             self.SELECTOR_GETLINK_ARTICLES)
 
     def _get_main_page(self):
-        print(self.page)
         self.main_page = Requester(''.join(
             [self.main_link, '?page=', self.page]))
         return self.main_page

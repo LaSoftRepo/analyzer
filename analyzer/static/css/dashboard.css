@@ -650,3 +650,10 @@ body {
       border-radius:10px;
    }  
 }
+
+.green-body {
+    color: green;
+}
+.red-body {
+    color: red;
+}

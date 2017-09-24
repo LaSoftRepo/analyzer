@@ -33,10 +33,16 @@ var parserTmp =
                         <td class="center">{{collection.description}}</td>
                         <td class="center"><a href="{{collection.link}}">LINK</a></td>
                         <td class="center">{{collection.price}}</td>
-                        <td class="center">{{collection.phones}}</td>
+                        <td class="center">
+                            <i ng-repeat="phone in collection.phones">{{phone}}, </i>
+                        </td>
                         <td class="center">{{collection.name}}</td>
-                        <td class="center">{{collection.sms_is_send}}</td>
-                        <td class="center">{{collection.email_is_send}}</td>
+                        <td ng-class="{\'green-body\': collection.sms_is_send, \'red-body\': !collection.sms_is_send}" class="center">
+                            <i ng-class="{\'fa-check-circle\': collection.sms_is_send, \'fa-times-circle\': !collection.sms_is_send}" class="fa fa-2x"></i>
+                        </td>
+                        <td ng-class="{\'green-body\': collection.email_is_send, \'red-body\': !collection.email_is_send}" class="center">
+                            <i ng-class="{\'fa-check-circle\': collection.email_is_send, \'fa-times-circle\': !collection.email_is_send}" class="fa fa-2x"></i>
+                        </td>
                     </tr>
                 </tbody>
             </table>
