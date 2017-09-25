@@ -5,17 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-    <div>Телефон: {{ phones|join:',' }}</div>
-    <div>Имя: {{ name }}</div>
+    <div>{{ phones|join:',' }}</div>
+    <div>{{ name }}</div>
     <br>
-    <div>Цена: {{ price }} {{ currency }}</div>
-    <div>Заголовок: {{ title|join:',' }}</div>
+    <div>{{ price }} {{ currency }}</div>
+    <div>{{ title|join:',' }}</div>
     <br>
-    <div>Город: {{ city }}</div>
+    <div>{{ city }}</div>
     <br>
-    <div>Описание: {{ description }}</div>
-    <div>Ссылка: <a href="{{ article_url }}">LINK</a></div>
+    <div>{{ description }}</div>
+    <div><a href="{{ article_url }}" target="_blank">LINK</a></div>
     <br>
-    <div>Дата / Время: {{ date_article }}</div>
+    <div>{{ date_article }}</div>
 </body>
 </html>

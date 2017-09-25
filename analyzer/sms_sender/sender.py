@@ -5,7 +5,7 @@ from collection.models import Collections
 
 class SmsSender:
     text = 'Готовы выкупить ваше авто, 90% рыночной стоимости, ' \
-           'деньги в день обращения. 000-111-22-33'
+           'деньги в день обращения. 0672323060, 0932714661'
 
     def __init__(self):
         self.error_message = ''

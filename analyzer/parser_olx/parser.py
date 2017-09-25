@@ -149,7 +149,7 @@ class ParserOlx(ConfigParserOlx):
             })
             if self.emails_admin:
                 status = send_mail(
-                    subject='From Analyzer ads.topvykup.com.ua',
+                    subject='Новая заявка — ads.topvykup.com.ua',
                     message=message,
                     from_email='analyzer@ads.topvykup.com.ua',
                     recipient_list=self.emails_admin,

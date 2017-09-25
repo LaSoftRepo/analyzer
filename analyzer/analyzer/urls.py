@@ -34,6 +34,7 @@ schema_view = get_swagger_view(title='Parser API')
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, base_name='users')
+router.register(r'users/current_user', UserViewSet, base_name='current_user')
 router.register(r'collections', CollectionsViewSet, base_name='collections')
 
 v1_0_patterns = [

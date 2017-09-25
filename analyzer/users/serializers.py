@@ -22,3 +22,13 @@ class UserSerializer(ModelSerializer):
         else:
             raise ValidationError({'password': ['Пароли не совпадают']})
         return user
+
+    def update(self, instance, validated_data):
+        if validated_data['password'] == validated_data['password2']:
+            del validated_data['password2']
+            user = super().update(instance, validated_data)
+            user.set_password(validated_data['password'])
+            user.save()
+        else:
+            raise ValidationError({'password': ['Пароли не совпадают']})
+        return user
