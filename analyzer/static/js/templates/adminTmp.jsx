@@ -43,7 +43,10 @@ var adminTmp =
 var adminCreateTmp =
     <div class="content-box-large">
     <div class="panel-heading">
-       <div class="panel-title"><h4>Create User</h4></div>
+       <div class="panel-title">
+           <h4 ng-if="$location.path() == \'/admin/profile\'">Изменить даные {{user.username}}</h4>
+           <h4 ng-if="$location.path() == \'/admin/create\'">Создать пользователя</h4>
+       </div>
        <a href="#!admin" class="btn btn-primary" style="float: right; margin-bottom: 10px;">Return</a>
     </div>
     <div class="panel-body">

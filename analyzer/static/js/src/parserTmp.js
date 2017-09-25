@@ -31,7 +31,7 @@ var parserTmp =
 '                        <td class="center">{{collection.city}}</td>'+
 '                        <td class="center">{{collection.title}}</td>'+
 '                        <td class="center">{{collection.description}}</td>'+
-'                        <td class="center"><a href="{{collection.link}}">LINK</a></td>'+
+'                        <td class="center"><a href="{{collection.link}}" target="_blank">LINK</a></td>'+
 '                        <td class="center">{{collection.price}}</td>'+
 '                        <td class="center">'+
 '                            <i ng-repeat="phone in collection.phones">{{phone}}, </i>'+

@@ -15,6 +15,10 @@ parserApp.config(function($routeProvider) {
     .when("/admin/create", {
         template : adminCreateTmp,
         controller : "administratorCreateAppController"
+    })
+    .when("/admin/profile", {
+        template : adminCreateTmp,
+        controller : "administratorProfileAppController"
     });
 });
 
@@ -98,7 +102,71 @@ parserApp.controller("administratorAppController", function($scope, $location, $
 
 });
 
+parserApp.controller("administratorProfileAppController", function($scope, $location, $http, $window, cfpLoadingBar) {
+    $scope.$location = $location;
+    $scope.start = function () {
+        cfpLoadingBar.start();
+    };
+
+    $scope.complete = function () {
+        cfpLoadingBar.complete();
+    };
+    $scope.user = {};
+    $scope.get_current_user = function () {
+        $http.get('api/v1.0/users/current_user')
+        .then(function(response) {
+            console.log(response);
+            $scope.user = response.data;
+        }, function(response) {
+
+        });
+    };
+    $scope.get_current_user();
+    $scope.save = function () {
+        $http.put('api/v1.0/users/'+$scope.user.id+'/', $scope.user)
+            .then(function(response) {
+                $scope.status = response.status;
+                $scope.data = response.data;
+                $scope.error_username = false;
+                $scope.error_password = false;
+                $scope.error_email = false;
+                $scope.error_password2 = false;
+                var host = $window.location.host;
+                var landingUrl = "http://" + host + "/accounts/logout/";
+                $window.location.href = landingUrl;
+            }, function(response) {
+                console.log(response.data);
+                if (response.data.username){
+                    $scope.error_username = response.data.username[0];
+                }else{
+                    $scope.error_username = false;
+                }
+                if (response.data.password){
+                    $scope.error_password = response.data.password[0];
+                }else{
+                    $scope.error_password = false;
+                }
+                if (response.data.password2){
+                    $scope.error_password2 = response.data.password2[0];
+                }else{
+                    $scope.error_password2 = false;
+                }
+                if (response.data.email){
+                    $scope.error_email = response.data.email[0];
+                }else{
+                    $scope.error_email = false;
+                }
+                $scope.status = response.status;
+            });
+    };
+});
+
 parserApp.controller("administratorCreateAppController", function($scope, $location, $http, cfpLoadingBar) {
+    $scope.$location = $location;
+    $scope.start = function () {
+        cfpLoadingBar.start();
+    };
+
     $scope.user = {
         // first_name: ''
     };
@@ -136,9 +204,11 @@ parserApp.controller("administratorCreateAppController", function($scope, $locat
                 $scope.status = response.status;
             });
     };
+    $scope.complete = function () {
+        cfpLoadingBar.complete();
+    };
 });
 
 parserApp.controller("currentLocationAppController", function($scope, $location, $http, cfpLoadingBar) {
-    // console.log($location.url())
     $scope.$location = $location;
 });
