@@ -122,7 +122,7 @@ class ParserOlx(ConfigParserOlx):
 
             city = self._get_location(page_article)
 
-            Collections.objects.create(
+            collection = Collections.objects.create(
                 create_at=date_article,
                 donor=Donor.OLX,
                 id_donor=id_in_site,
@@ -148,7 +148,7 @@ class ParserOlx(ConfigParserOlx):
                 'currency': currency
             })
             if self.emails_admin:
-                send_mail(
+                status = send_mail(
                     subject='From Analyzer ads.topvykup.com.ua',
                     message=message,
                     from_email='analyzer@ads.topvykup.com.ua',
@@ -156,6 +156,9 @@ class ParserOlx(ConfigParserOlx):
                     fail_silently=False,
                     html_message=message
                 )
+                if status:
+                    collection.email_is_send = True
+                    collection.save()
 
     @staticmethod
     def get_message(kwargs):
