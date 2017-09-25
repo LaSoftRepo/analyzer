@@ -8,7 +8,6 @@ from collection.models import Collections
 
 class CollectionsSerializer(ModelSerializer):
     price = serializers.SerializerMethodField()
-    phones = serializers.SerializerMethodField()
 
     class Meta:
         model = Collections
@@ -19,6 +18,3 @@ class CollectionsSerializer(ModelSerializer):
     @staticmethod
     def get_price(obj):
         return ' '.join((str(obj.price), obj.currency))
-
-    def get_phones(self, obj):
-        return json.loads(obj.phones)

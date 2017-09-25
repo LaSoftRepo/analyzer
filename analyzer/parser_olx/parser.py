@@ -1,5 +1,8 @@
 import datetime
 import json
+
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from lxml import html
 import re
 import requests
@@ -10,9 +13,7 @@ from django.utils import timezone
 from django.utils.timezone import make_naive
 
 from collection.models import Collections, Donor
-
-
-
+from users.models import User
 
 
 class ConfigParserOlx:
@@ -72,6 +73,8 @@ class ParserOlx(ConfigParserOlx):
     def __init__(self):
         self.page = '1'
         self.stop_parse = 0
+        self.emails_admin = User.objects.filter(
+            is_get_email=True).values_list('email', flat=True)
 
     @property
     def stop_day(self):
@@ -109,22 +112,54 @@ class ParserOlx(ConfigParserOlx):
             price, currency = self._get_price(page_article)
 
             phones = self._get_phone(page_article, id_article)
-            dict_phones = json.dumps(
-                { key:value for key, value in enumerate(phones)})
+            dict_phones = {key:value for key, value in enumerate(phones)}
+
+            name = self._get_name(page_article)
+
+            description = self._get_description(page_article)
+
+            title = self._get_title(page_article),
+
+            city = self._get_location(page_article)
 
             Collections.objects.create(
                 create_at=date_article,
                 donor=Donor.OLX,
                 id_donor=id_in_site,
-                city=self._get_location(page_article),
-                title=self._get_title(page_article),
-                description=self._get_description(page_article),
+                city=city,
+                title=title,
+                description=description,
                 link=article_url,
                 price=price,
                 currency=currency,
                 phones=dict_phones,
-                name=self._get_name(page_article)
+                name=name
             )
+
+            message = self.get_message(kwargs={
+                'phones': phones,
+                'name': name,
+                'price': price,
+                'title': title,
+                'city': city,
+                'description': description,
+                'article_url': article_url,
+                'date_article': date_article,
+                'currency': currency
+            })
+            if self.emails_admin:
+                send_mail(
+                    subject='From Analyzer ads.topvykup.com.ua',
+                    message=message,
+                    from_email='analyzer@ads.topvykup.com.ua',
+                    recipient_list=self.emails_admin,
+                    fail_silently=False,
+                    html_message=message
+                )
+
+    @staticmethod
+    def get_message(kwargs):
+        return render_to_string('message.html', kwargs)
 
     def _get_name(self, article):
         name = ''.join(article.get_text(self.NAME))
@@ -155,7 +190,6 @@ class ParserOlx(ConfigParserOlx):
 
     def _get_title(self, article):
         title = ''.join(article.get_text(self.TITLE))
-        print(title, 'ddd')
         if title:
             return title.replace('\n', '').strip(' ')
         else:
@@ -182,7 +216,6 @@ class ParserOlx(ConfigParserOlx):
             self.SELECTOR_GETLINK_ARTICLES)
 
     def _get_main_page(self):
-        print(self.page)
         self.main_page = Requester(''.join(
             [self.main_link, '?page=', self.page]))
         return self.main_page

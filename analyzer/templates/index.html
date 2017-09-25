@@ -6,6 +6,7 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.css' type='text/css' media='all' />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,16 +17,20 @@
 	           <div class="col-md-5">
 	              <!-- Logo -->
 	              <div class="logo">
-	                 <h1><a href="index.html"></a></h1>
+                      {% verbatim %}
+                         <ul class="nav" ng-controller="currentLocationAppController" style="font-size: 20px; margin-top: 8px">
+                            <!-- Main menu -->
+                            <li style="margin-right: 20px;" ng-class="{current: $location.path() == '/'}"><a href="#/!" style="color: white">Parsing OLX</a></li>
+                            <li ng-class="{current: $location.path() == '/admin'}" class=""><a href="#!admin" style="color: white">Administrators</a></li>
+                         </ul>
+                      {% endverbatim %}
 	              </div>
 	           </div>
 	           <div class="col-md-5">
 	              <div class="row">
 	                <div class="col-lg-12">
 	                  <div class="input-group form">
-{#	                       <input type="text" class="form-control" placeholder="Search...">#}
 	                       <span class="input-group-btn">
-{#	                         <button class="btn btn-primary" type="button">Search</button>#}
 	                       </span>
 	                  </div>
 	                </div>
@@ -52,18 +57,18 @@
 
     <div class="page-content">
     	<div class="row">
-		  <div class="col-md-2">
-		  	<div class="sidebar content-box" style="display: block;">
-                {% verbatim %}
-                <ul class="nav" ng-controller="currentLocationAppController">
-                    <!-- Main menu -->
-                    <li ng-class="{current: $location.path() == '/'}"><a href="#/!"><i class=""></i> Parsing OLX</a></li>
-                    <li ng-class="{current: $location.path() == '/admin'}" class=""><a href="#!admin"><i class="glyphicon glyphicon-home"></i> Administrators</a></li>
-                </ul>
-                {% endverbatim %}
-             </div>
-		  </div>
-            <div class="col-md-10" ng-view>
+{#		  <div class="col-md-2">#}
+{#		  	<div class="sidebar content-box" style="display: block;">#}
+{#                {% verbatim %}#}
+{#                <ul class="nav" ng-controller="currentLocationAppController">#}
+{#                    <!-- Main menu -->#}
+{#                    <li ng-class="{current: $location.path() == '/'}"><a href="#/!"><i class=""></i> Parsing OLX</a></li>#}
+{#                    <li ng-class="{current: $location.path() == '/admin'}" class=""><a href="#!admin"><i class="glyphicon glyphicon-home"></i> Administrators</a></li>#}
+{#                </ul>#}
+{#                {% endverbatim %}#}
+{#             </div>#}
+{#		  </div>#}
+            <div class="col-md-12" ng-view>
 		  </div>
         </div>
     </div>
