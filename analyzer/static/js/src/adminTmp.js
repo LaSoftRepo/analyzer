@@ -14,6 +14,7 @@ var adminTmp =
 '                       <th>Last Name</th>'+
 '                      <th>Username</th>'+
 '                       <th>Email</th>'+
+'                       <th>GET Email</th>'+
 '                   </tr>'+
 '               </thead>'+
 '               <tbody>'+
@@ -23,6 +24,9 @@ var adminTmp =
 '                       <td>{{user.last_name}}</td>'+
 '                      <td>{{user.username}}</td>'+
 '                       <td>{{user.email}}</td>'+
+'                       <td>'+
+'                           <input type="checkbox" ng-checked="user.is_get_email" ng-model="user.is_get_email" ng-click="get_email(user)" />'+
+'                       </td>'+
 '                   </tr>'+
 '               </tbody>'+
 '           </table>'+

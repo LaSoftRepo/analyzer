@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_auth.serializers import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
@@ -9,9 +9,9 @@ class UserSerializer(ModelSerializer):
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('username', 'email', 'id', 'first_name', 'last_name',
-                  'password', 'password2')
+                  'password', 'password2', 'is_get_email')
 
     def create(self, validated_data):
         if validated_data['password'] == validated_data['password2']:

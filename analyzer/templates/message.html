@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>Телефон: {{ phones|join:',' }}</div>
+    <div>Имя: {{ name }}</div>
+    <br>
+    <div>Цена: {{ price }} {{ currency }}</div>
+    <div>Заголовок: {{ title|join:',' }}</div>
+    <br>
+    <div>Город: {{ city }}</div>
+    <br>
+    <div>Описание: {{ description }}</div>
+    <div>Ссылка: <a href="{{ article_url }}">LINK</a></div>
+    <br>
+    <div>Дата / Время: {{ date_article }}</div>
+</body>
+</html>

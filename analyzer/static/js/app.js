@@ -91,6 +91,10 @@ parserApp.controller("administratorAppController", function($scope, $location, $
 
     $scope.get_users();
 
+    $scope.get_email = function (user) {
+        $http.patch('api/v1.0/users/'+user.id+'/', {"is_get_email": user.is_get_email } )
+    }
+
 
 });
 

@@ -42,10 +42,8 @@ INSTALLED_APPS = [
 
     # origin
     'rest_framework',
-    # 'rest_auth',
     'rest_framework_swagger',
     'django_celery_beat',
-    # 'rest_framework.authtoken',
 
     # own
     'users',
@@ -53,6 +51,7 @@ INSTALLED_APPS = [
     'jsx_compiler',
     'parser_olx',
     'collection',
+    'sms_sender',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +83,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'analyzer.wsgi.application'
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Database
@@ -154,7 +155,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'Server <server@whatever.com>'
+DEFAULT_FROM_EMAIL = 'Analyzer <info@ads.topvykup.com.ua>'
 
 REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS':
