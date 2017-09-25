@@ -1,9 +1,6 @@
 from zeep import Client
 
-from django.core.mail import send_mail
-
 from collection.models import Collections
-from users.models import User
 
 
 class SmsSender:
@@ -57,7 +54,6 @@ class ClientSmsSender:
                 self.sms.send(phone)
                 if self.sms.msg_status == 'Отправлено':
                     article.sms_is_send = True
-                    self.send_mails(phone)
                 else:
                     article.phones['error'] = self.sms.error_message
                 article.save()
