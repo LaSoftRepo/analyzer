@@ -19,3 +19,13 @@ class UserViewSet(viewsets.ModelViewSet):
     def current_user(self, request, pk=None):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+    @detail_route(methods=['patch'], permission_classes=[IsAuthenticated])
+    def get_email(self, request, pk=None):
+        user = self.get_object()
+        is_get_email = request.data.get('is_get_email')
+        if is_get_email is not None:
+            user.is_get_email = is_get_email
+            user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
