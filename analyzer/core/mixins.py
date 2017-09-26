@@ -17,7 +17,7 @@ class EmailSenderMixin:
             'title': article.title,
             'city': article.city,
             'description': article.description,
-            'article_url': article.article_url,
+            'article_url': article.link,
             'date_article': article.date_article,
             'currency': article.currency
         })
