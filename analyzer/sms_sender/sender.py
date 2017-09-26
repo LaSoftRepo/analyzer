@@ -56,6 +56,7 @@ class ClientSmsSender(mixins.EmailSenderMixin):
         self.sms = SmsSender()
 
     def start(self):
+        self.check_email()
         for article in self.get_articles:
             phone = self._get_phone(article)
             if phone:
@@ -69,6 +70,12 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                 # print(self.sms.msg_status)
                 # print(self.sms.error_message)
                 # print(self.sms.balance)
+
+    def check_email(self):
+        collections = Collections.objects.filter(sms_is_send=True,
+                                                 email_is_send=False)
+        for collection in collections:
+            self.send_email_to_admin(collection)
 
     def _get_phone(self, article):
         for k, phone in article.phones.items():
