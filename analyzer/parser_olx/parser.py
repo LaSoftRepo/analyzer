@@ -147,6 +147,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
             if sms_status:
                 collection.sms_is_send = True
+                collection.save()
                 self.send_email_to_admin(collection)
 
     @staticmethod
