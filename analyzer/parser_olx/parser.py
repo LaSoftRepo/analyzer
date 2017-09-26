@@ -235,21 +235,24 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
     def _get_date_article(self, page_article):
         date_article = ' '.join(page_article.get_text(self.SELECTOR_DATE))
-        p = re.compile(r'(?P<time_art>\d{2}[:]\d{2})')
-        time_art = re.search(p, date_article)
-        time_art = time_art.group().split(':')
-        p = re.compile('(?P<date_art>\d{1,2}\s\w+\s\d{4})')
-        date_art = re.search(p, date_article)
-        date_art = date_art.group().split(' ')
-        date_art.reverse()
-        date_art[1] = mutable_month(date_art[1])
-        datetime_article = datetime.datetime(
-            int(date_art[0]),
-            int(date_art[1]),
-            int(date_art[2]),
-            hour=int(time_art[0]),
-            minute=int(time_art[1])
-        )
+        try:
+            p = re.compile(r'(?P<time_art>\d{2}[:]\d{2})')
+            time_art = re.search(p, date_article)
+            time_art = time_art.group().split(':')
+            p = re.compile('(?P<date_art>\d{1,2}\s\w+\s\d{4})')
+            date_art = re.search(p, date_article)
+            date_art = date_art.group().split(' ')
+            date_art.reverse()
+            date_art[1] = mutable_month(date_art[1])
+            datetime_article = datetime.datetime(
+                int(date_art[0]),
+                int(date_art[1]),
+                int(date_art[2]),
+                hour=int(time_art[0]),
+                minute=int(time_art[1])
+            )
+        except AttributeError:
+            return datetime.datetime.now()
         return datetime_article
 
     def _get_phone(self, page_article, id_article):
