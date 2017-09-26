@@ -14,6 +14,7 @@ from django.utils.timezone import make_naive
 
 from collection.models import Collections, Donor
 from core import mixins
+from core.utils import validate_sms_phone
 from sms_sender.sender import SmsSender
 from users.models import User
 
@@ -75,6 +76,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
     def __init__(self):
         super().__init__()
         self.page = '1'
+        self.stop_parse_date = 0
         self.stop_parse = 0
         self.emails_admin = User.objects.filter(
             is_get_email=True).values_list('email', flat=True)
@@ -84,9 +86,11 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
         return timezone.now() - datetime.timedelta(days=7)
 
     def run(self):
+        self.stop_parse = 0
         for i, page in enumerate(self._get_max_pages()):
+            print('parse', page)
 
-            if self.stop_parse > 10:
+            if self.stop_parse > 30:
                 break
 
             if i:
@@ -109,6 +113,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
             id_in_site = self._get_id_article(page_article)
 
             if Collections.objects.filter(id_donor__exact=id_in_site).exists():
+                self.stop_parse += 1
                 continue
 
             id_article = article_url.split('.')[-2].split('-')[-1]
@@ -122,7 +127,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
             description = self._get_description(page_article)
 
-            title = self._get_title(page_article),
+            title = self._get_title(page_article)
 
             city = self._get_location(page_article)
 
@@ -143,23 +148,12 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
             if collection.sms_is_send:
                 continue
 
-            sms_status = sms.send(self._validate_sms_phone(collection))
+            sms_status = sms.send(validate_sms_phone(collection))
 
             if sms_status:
                 collection.sms_is_send = True
                 collection.save()
                 self.send_email_to_admin(collection)
-
-    @staticmethod
-    def _validate_sms_phone(collection):
-        for k, phone in collection.phones.items():
-            if len(phone) == 10:
-                phone = ''.join(('+38', phone))
-            if phone:
-                return phone
-            else:
-                collection.phones['error'] = 'ERROR PHONE'
-                collection.save()
 
     def _get_name(self, article):
         name = ''.join(article.get_text(self.NAME))
@@ -191,7 +185,8 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
     def _get_title(self, article):
         title = ''.join(article.get_text(self.TITLE))
         if title:
-            return title.replace('\n', '').strip(' ')
+            p = title.replace('\n', '').strip(' ')
+            return p
         else:
             return ''
 
@@ -221,15 +216,15 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
         return self.main_page
 
     def _get_max_pages(self):
-        data =  self._get_main_page().get_text(
+        data = self._get_main_page().get_text(
             '//div[@class="pager rel clr"]//text()')
         return [i for i in data if i.isdigit()]
 
     def _stop_date_article(self, article):
         date_article = self._get_date_article(article)
         if date_article <= make_naive(self.stop_day):
-            self.stop_parse =+ 1
-        if self.stop_parse > 10:
+            self.stop_parse_date += 1
+        if self.stop_parse_date > 10:
             return True, date_article
         return False, date_article
 
@@ -301,6 +296,7 @@ def mutable_month(month):
     }
     return months.get(month, '01')
 
+
 def mutable_phone(phone):
     p = re.compile(r'\d{7,10}')
     phone = phone.replace('-', '')
@@ -314,7 +310,3 @@ def mutable_phone(phone):
             phone = phone[2:]
     phone = re.findall(p, phone)
     return phone
-
-
-# parser = ParserOlx()
-# parser.run()
