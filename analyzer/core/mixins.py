@@ -11,14 +11,14 @@ class EmailSenderMixin:
 
     def send_email_to_admin(self, article):
         message = self.get_message(kwargs={
-            'phones': article.phones,
+            'phones': self._get_mixin_phones(article.phones),
             'name': article.name,
             'price': article.price,
             'title': article.title,
             'city': article.city,
             'description': article.description,
             'article_url': article.link,
-            'date_article': article.date_article,
+            'date_article': article.create_at,
             'currency': article.currency
         })
         if self.emails_admin:
@@ -33,6 +33,13 @@ class EmailSenderMixin:
             if status:
                 article.email_is_send = True
                 article.save()
+
+    @staticmethod
+    def _get_mixin_phones(phones):
+        phones_list = []
+        for k, phone in phones.items():
+            phones_list.append(phone)
+        return phones_list
 
     @staticmethod
     def get_message(kwargs):
