@@ -13,6 +13,8 @@ from django.utils import timezone
 from django.utils.timezone import make_naive
 
 from collection.models import Collections, Donor
+from core import mixins
+from sms_sender.sender import SmsSender
 from users.models import User
 
 
@@ -68,9 +70,10 @@ class Requester(object):
         return jar
 
 
-class ParserOlx(ConfigParserOlx):
+class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
     def __init__(self):
+        super().__init__()
         self.page = '1'
         self.stop_parse = 0
         self.emails_admin = User.objects.filter(
@@ -93,6 +96,7 @@ class ParserOlx(ConfigParserOlx):
             self.parse_pages()
 
     def parse_pages(self):
+        sms = SmsSender()
         for article_url in self._get_list_article():
 
             page_article = Requester(article_url)
@@ -136,33 +140,25 @@ class ParserOlx(ConfigParserOlx):
                 name=name
             )
 
-            message = self.get_message(kwargs={
-                'phones': phones,
-                'name': name,
-                'price': price,
-                'title': title,
-                'city': city,
-                'description': description,
-                'article_url': article_url,
-                'date_article': date_article,
-                'currency': currency
-            })
-            if self.emails_admin:
-                status = send_mail(
-                    subject='Новая заявка — ads.topvykup.com.ua',
-                    message=message,
-                    from_email='analyzer@ads.topvykup.com.ua',
-                    recipient_list=self.emails_admin,
-                    fail_silently=False,
-                    html_message=message
-                )
-                if status:
-                    collection.email_is_send = True
-                    collection.save()
+            if collection.sms_is_send:
+                continue
+
+            sms.send(self._validate_sms_phone(collection))
+
+            if sms.msg_status == 'Отправлено':
+                collection.sms_is_send = True
+                self.send_email_to_admin(collection)
 
     @staticmethod
-    def get_message(kwargs):
-        return render_to_string('message.html', kwargs)
+    def _validate_sms_phone(collection):
+        for k, phone in collection.phones.items():
+            if len(phone) == 10:
+                phone = ''.join(('+38', phone))
+            if phone:
+                return phone
+            else:
+                collection.phones['error'] = 'ERROR PHONE'
+                collection.save()
 
     def _get_name(self, article):
         name = ''.join(article.get_text(self.NAME))

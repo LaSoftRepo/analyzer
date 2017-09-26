@@ -1,6 +1,10 @@
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from zeep import Client
 
 from collection.models import Collections
+from core import mixins
+from users.models import User
 
 
 class SmsSender:
@@ -10,6 +14,7 @@ class SmsSender:
     def __init__(self):
         self.error_message = ''
         self.msg_status = ''
+        self.msg_id = ''
         self.client = Client('http://turbosms.in.ua/api/wsdl.html')
         self.auth = self.client.service.Auth(login='analyzer',
                                              password='analyzer99')
@@ -30,6 +35,7 @@ class SmsSender:
                                              text=self.text)
         if result[0] == 'Сообщения успешно отправлены':
             self.msg_status = self.get_msg_status(result[1])
+            self.msg_id = result[1]
         else:
             self.error_message = result[0]
 
@@ -42,8 +48,9 @@ class SmsSender:
         return self.client.service.GetCreditBalance()
 
 
-class ClientSmsSender:
+class ClientSmsSender(mixins.EmailSenderMixin):
     def __init__(self):
+        super().__init__()
         self.get_articles = Collections.objects.filter(sms_is_send=False)
         self.sms = SmsSender()
 
@@ -54,6 +61,7 @@ class ClientSmsSender:
                 self.sms.send(phone)
                 if self.sms.msg_status == 'Отправлено':
                     article.sms_is_send = True
+                    self.send_email_to_admin(article)
                 else:
                     article.phones['error'] = self.sms.error_message
                 article.save()
