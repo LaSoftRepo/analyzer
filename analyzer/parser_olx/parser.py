@@ -143,9 +143,9 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
             if collection.sms_is_send:
                 continue
 
-            sms.send(self._validate_sms_phone(collection))
+            sms_status = sms.send(self._validate_sms_phone(collection))
 
-            if sms.msg_status == 'Отправлено':
+            if sms_status:
                 collection.sms_is_send = True
                 self.send_email_to_admin(collection)
 
