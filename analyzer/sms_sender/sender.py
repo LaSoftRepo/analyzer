@@ -23,7 +23,7 @@ class SmsSender:
     def send(self, phone):
         if self.auth == 'Вы успешно авторизировались':
             if float(self.balance):
-                self._result(phone)
+                return self._result(phone)
             else:
                 self.error_message = f'Ваш баланс {self.balance}'
         elif self.auth == 'Неверный логин или пароль':
@@ -36,6 +36,7 @@ class SmsSender:
         if result[0] == 'Сообщения успешно отправлены':
             self.msg_status = self.get_msg_status(result[1])
             self.msg_id = result[1]
+            return True
         else:
             self.error_message = result[0]
 
@@ -58,8 +59,8 @@ class ClientSmsSender(mixins.EmailSenderMixin):
         for article in self.get_articles:
             phone = self._get_phone(article)
             if phone:
-                self.sms.send(phone)
-                if self.sms.msg_status == 'Отправлено':
+                sms_status = self.sms.send(phone)
+                if sms_status:
                     article.sms_is_send = True
                     self.send_email_to_admin(article)
                 else:
