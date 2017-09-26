@@ -4,7 +4,7 @@ from zeep import Client
 
 from collection.models import Collections
 from core import mixins
-from users.models import User
+from core.utils import validate_sms_phone
 
 
 class SmsSender:
@@ -52,42 +52,24 @@ class SmsSender:
 class ClientSmsSender(mixins.EmailSenderMixin):
     def __init__(self):
         super().__init__()
-        self.get_articles = Collections.objects.filter(sms_is_send=False)
+        self.collections = Collections.objects.filter(sms_is_send=False)
         self.sms = SmsSender()
 
     def start(self):
         self.check_email()
-        for article in self.get_articles:
-            phone = self._get_phone(article)
+        for collection in self.collections:
+            phone = validate_sms_phone(collection)
             if phone:
                 sms_status = self.sms.send(phone)
                 if sms_status:
-                    article.sms_is_send = True
-                    self.send_email_to_admin(article)
+                    collection.sms_is_send = True
+                    self.send_email_to_admin(collection)
                 else:
-                    article.phones['error'] = self.sms.error_message
-                article.save()
-                # print(self.sms.msg_status)
-                # print(self.sms.error_message)
-                # print(self.sms.balance)
+                    collection.phones['error'] = self.sms.error_message
+                collection.save()
 
     def check_email(self):
         collections = Collections.objects.filter(sms_is_send=True,
                                                  email_is_send=False)
         for collection in collections:
             self.send_email_to_admin(collection)
-
-    def _get_phone(self, article):
-        for k, phone in article.phones.items():
-            phone = self._normalize_phone(phone)
-            if phone:
-                return phone
-            else:
-                article.phones['error'] = 'ERROR PHONE'
-                article.save()
-                break
-
-    @staticmethod
-    def _normalize_phone(phone):
-        if len(phone) == 10:
-            return ''.join(('+38', phone))
