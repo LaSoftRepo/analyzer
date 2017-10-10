@@ -72,7 +72,7 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
             if id_article in collections:
                 continue
 
-            data_article = Requester(self.article_link(id)).get_json()
+            data_article = Requester(self.article_link(id_article)).get_json()
 
             phones = [self._normailize_phone(data_article)]
             dict_phones = {key: value for key, value in enumerate(phones)}
