@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'parser_olx',
     'collection',
     'sms_sender',
+    'parser_ria',
 ]
 
 MIDDLEWARE = [
