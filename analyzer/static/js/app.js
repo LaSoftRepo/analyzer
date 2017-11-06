@@ -12,6 +12,10 @@ parserApp.config(function($routeProvider) {
         template : adminTmp,
         controller : "administratorAppController"
     })
+    .when("/settings", {
+        template : settingsTmp,
+        controller : "settingsAppController"
+    })
     .when("/admin/create", {
         template : adminCreateTmp,
         controller : "administratorCreateAppController"
@@ -211,4 +215,26 @@ parserApp.controller("administratorCreateAppController", function($scope, $locat
 
 parserApp.controller("currentLocationAppController", function($scope, $location, $http, cfpLoadingBar) {
     $scope.$location = $location;
+});
+
+parserApp.controller("settingsAppController", function($scope, $location, $http, cfpLoadingBar) {
+    $scope.$location = $location;
+    jQuery('.datepicker-plugin').datepicker({
+        weekStart: 1,
+        clearBtn: true,
+        language: "ru",
+        autoclose: true,
+        todayHighlight: true,
+        format: "yyyy-mm-dd"
+    });
+    $http.get('api/v1.0/settings')
+    .then(function(response) {
+            console.log(response);
+            $scope.settings_site = response.data.results[0];
+        }, function(response) {
+
+        });
+    $scope.save_settings = function () {
+        $http.patch('api/v1.0/settings/1/', $scope.settings_site)
+    }
 });

@@ -1,0 +1,12 @@
+/*label{*/
+    /*display:inline;*/
+/*}*/
+
+.custom-label {
+    vertical-align: middle;
+    margin-right: 30px;
+}
+
+.right-column  {
+    border-right: 1px solid black;
+}
