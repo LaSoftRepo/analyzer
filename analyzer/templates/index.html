@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.css' type='text/css' media='all' />
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.standalone.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,19 +17,20 @@
     <div class="header">
 	     <div class="container">
 	        <div class="row">
-	           <div class="col-md-5">
+	           <div class="col-md-6">
 	              <!-- Logo -->
 	              <div class="logo">
                       {% verbatim %}
                          <ul class="nav" ng-controller="currentLocationAppController" style="font-size: 20px; margin-top: 8px">
                             <!-- Main menu -->
-                            <li style="margin-right: 20px;" ng-class="{current: $location.path() == '/'}"><a href="#/!" style="color: white">Parsing OLX</a></li>
-                            <li ng-class="{current: $location.path() == '/admin'}" class=""><a href="#!admin" style="color: white">Administrators</a></li>
+                             <li style="margin-right: 20px;" ng-class="{current: $location.path() == '/'}"><a href="#/!" style="color: white">Результаты парсинга</a></li>
+                             <li style="margin-right: 20px;" ng-class="{current: $location.path() == '/settings'}" class=""><a href="#!settings" style="color: white">Настройки</a></li>
+                             <li ng-class="{current: $location.path() == '/admin'}" class=""><a href="#!admin" style="color: white">Пользователи</a></li>
                          </ul>
                       {% endverbatim %}
 	              </div>
 	           </div>
-	           <div class="col-md-5">
+	           <div class="col-md-4">
 	              <div class="row">
 	                <div class="col-lg-12">
 	                  <div class="input-group form">
@@ -78,6 +82,10 @@
 {% endblock content %}
 {% block extra_js %}
     <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
+    <script type="text/javascript" src="{% static 'js/ui-bootstrap-tpls-2.5.0.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'locales/bootstrap-datepicker.ru.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
     {% compiled_js %}
 {% endblock %}
