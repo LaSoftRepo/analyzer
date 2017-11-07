@@ -1,4 +1,4 @@
-var parserApp = angular.module('parserApp', ['ngRoute', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap']);
+var parserApp = angular.module('parserApp', ['ngRoute', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap', 'ngAnimate']);
 
 
 
