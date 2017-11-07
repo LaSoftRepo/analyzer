@@ -47,11 +47,13 @@ var parserTmp =
 '                </tbody>'+
 '            </table>'+
 '        </div>'+
-'        <nav ng-if="collection_count > 10">'+
-'           <ul class="pagination">'+
-'               <li class="page-item" ng-class="{active: current_page == pages}" ng-repeat="pages in count_paginator(total_pages)">'+
-'                   <a class="page-link" href="" ng-click="get_collection(pages)">{{pages}}</a>'+
-'               </li>'+
-'           </ul>'+
-'       </nav>'+
+'        <div class="scrollmenu">'+
+'            <nav ng-if="collection_count > 10" class="col-md-12">'+
+'                <ul class="pagination">'+
+'                    <li class="page-item" ng-class="{active: current_page == pages}" ng-repeat="pages in count_paginator(total_pages)">'+
+'                        <a class="page-link" href="" ng-click="get_collection(pages)">{{pages}}</a>'+
+'                    </li>'+
+'                </ul>'+
+'            </nav>'+
+'        </div>'+
 '    </div>';

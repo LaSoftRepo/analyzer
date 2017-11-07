@@ -10,3 +10,14 @@
 .right-column  {
     border-right: 1px solid black;
 }
+
+div.scrollmenu {
+    overflow: auto;
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
