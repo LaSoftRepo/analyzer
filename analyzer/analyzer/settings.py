@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'django_celery_beat',
+    'solo',
 
     # own
     'users',
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'collection',
     'sms_sender',
     'parser_ria',
+    'settings_analyzer',
 ]
 
 MIDDLEWARE = [
