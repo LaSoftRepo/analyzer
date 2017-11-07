@@ -10,6 +10,8 @@ from django.utils import timezone
 from core import mixins
 from collection.models import Donor, Collections
 from core.utils import validate_sms_phone
+from settings_analyzer.models import Settings
+from settings_analyzer.validators import filter_parse
 from sms_sender.sender import SmsSender
 
 
@@ -38,13 +40,19 @@ class WrapperRiaApi:
 
     @property
     def main_link(self):
+        year_from = Settings.get_solo().date_from or '1990'
+        if isinstance(year_from, datetime):
+            year_from = year_from.year
+        year_to = Settings.get_solo().date_to or '2017'
+        if isinstance(year_to, datetime):
+            year_to = year_to.year
         return f'{self.link}/search' \
                f'?api_key={self.api_key}' \
                '&category_id=1' \
-               '&s_yers[0]=1990' \
-               '&po_yers[0]=2017' \
-               '&price_ot=1000' \
-               '&price_do=5000' \
+               f'&s_yers[0]={year_from}' \
+               f'&po_yers[0]={year_to}' \
+               '&price_ot=100' \
+               '&price_do=10000' \
                '&currency=1' \
                '&abroad=2' \
                '&custom=1' \
@@ -92,6 +100,9 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
             name = self._get_name(link)
 
             price = data_article.get('USD', '')
+
+            if not filter_parse(title, description, price, '$'):
+                continue
 
             collection = Collections.objects.create(
                 create_at=date_article,

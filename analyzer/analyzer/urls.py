@@ -28,7 +28,8 @@ from rest_framework_swagger.views import get_swagger_view
 
 from collection.views import CollectionsViewSet
 from parser_olx.views import parse
-from settings_analyzer.views import SettingsViewSet
+from settings_analyzer.views import SettingsViewSet, StatusViewSet, \
+    StopWordViewSet
 from users.views import UserViewSet
 
 schema_view = get_swagger_view(title='Parser API')
@@ -39,6 +40,8 @@ router.register(r'users/current_user', UserViewSet, base_name='current_user')
 router.register(r'users/get_email', UserViewSet, base_name='get_email')
 router.register(r'collections', CollectionsViewSet, base_name='collections')
 router.register(r'settings', SettingsViewSet, base_name='settings')
+router.register(r'status', StatusViewSet, base_name='status')
+router.register(r'stopword', StopWordViewSet, base_name='status')
 
 v1_0_patterns = [
     url(r'^rest-auth/', include('rest_auth.urls')),

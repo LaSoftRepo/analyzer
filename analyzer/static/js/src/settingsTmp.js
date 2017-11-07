@@ -7,6 +7,12 @@ var settingsTmp =
 '        <br/>'+
 '        <br/>'+
 '        <br/>'+
+'        <div>'+
+'            <script type="text/ng-template" id="alert.html">'+
+'                <div ng-transclude></div>'+
+'            </script>'+
+'            <div uib-alert ng-repeat="alert in alerts" class="alert-info" close="closeAlert($index)">{{alert.msg}}</div>'+
+'        </div>'+
 '        <div class="panel-body">'+
 '            <div class="row container-fluid">'+
 '                <div class="col-md-3 right-column">'+
@@ -45,30 +51,30 @@ var settingsTmp =
 '                    <div class="row">'+
 '                        <div class="col-md-12">'+
 '                            <div class="form-group">'+
-'                                <div class="checkbox">'+
-'                                    <label><input type="checkbox" value="" class="custom-label">Option 1</label>'+
+'                                <div class="checkbox" ng-repeat="site in status">'+
+'                                    <label><input type="checkbox" value="" class="custom-label" ng-checked="site.is_enable" ng-model="site.is_enable" />{{site.name}}</label>'+
 '                                </div>'+
 '                            </div>'+
 '                        </div>'+
 '                    </div>'+
-'                    <button type="button" class="btn btn-primary btn-sm float-right">Save</button>'+
+'                    <button type="button" class="btn btn-primary btn-sm float-right" ng-click="save_status()">Save</button>'+
 '                </div>'+
 '                <div class="col-md-6">'+
 '                    <div class="row">'+
 '                        <div class="col-md-12">'+
 '                            <div class="row">'+
 '                                <div class="col-md-3">'+
-'                                    <input type="text"/>'+
+'                                    <input type="text" ng-model="word_input.word"/>'+
 '                                </div>'+
 '                                <div class="col-md-3">'+
-'                                    <button type="button" class="btn btn-primary btn-sm">Save</button>'+
+'                                    <button type="button" class="btn btn-primary btn-sm" ng-click="save_word()">Save</button>'+
 '                                </div>'+
 '                            </div>'+
 '                            <br/>'+
-'                             <ul class="list-group">'+
-'                                <li class="list-group-item d-flex justify-content-between align-items-center">First item <div class="btn btn-danger badge badge-pill">Delete</div></li>'+
-'                                <li class="list-group-item">Second item</li>'+
-'                                <li class="list-group-item">Third item</li>'+
+'                             <ul class="list-group" style="max-width: 300px">'+
+'                                <li ng-repeat="word in stopwords" class="list-group-item d-flex justify-content-between align-items-center">{{word.word}}'+
+'                                    <div class="btn btn-danger badge badge-pill" ng-click="delete_word(word)">Delete</div>'+
+'                                </li>'+
 '                            </ul>'+
 '                        </div>'+
 '                    </div>'+

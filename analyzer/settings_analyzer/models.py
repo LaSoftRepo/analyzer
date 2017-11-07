@@ -21,8 +21,12 @@ class StatusSiteParse(models.Model):
 class StopWordList(models.Model):
     word = models.CharField(
         max_length=50,
-        unique=True
+        unique=True,
+        verbose_name='слово'
     )
 
     def __str__(self):
         return self.word
+
+    class Meta:
+        verbose_name = 'Stop Word'

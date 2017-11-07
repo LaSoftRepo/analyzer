@@ -1,4 +1,4 @@
-var parserApp = angular.module('parserApp', ['ngRoute', 'ngSanitize', 'angular-loading-bar']);
+var parserApp = angular.module('parserApp', ['ngRoute', 'ngSanitize', 'angular-loading-bar', 'ui.bootstrap']);
 
 
 
@@ -119,7 +119,6 @@ parserApp.controller("administratorProfileAppController", function($scope, $loca
     $scope.get_current_user = function () {
         $http.get('api/v1.0/users/current_user')
         .then(function(response) {
-            console.log(response);
             $scope.user = response.data;
         }, function(response) {
 
@@ -221,6 +220,9 @@ parserApp.controller("settingsAppController", function($scope, $location, $http,
     $scope.$location = $location;
     jQuery('.datepicker-plugin').datepicker({
         weekStart: 1,
+        startView: 2,
+        minViewMode: 2,
+        maxViewMode: 2,
         clearBtn: true,
         language: "ru",
         autoclose: true,
@@ -229,12 +231,81 @@ parserApp.controller("settingsAppController", function($scope, $location, $http,
     });
     $http.get('api/v1.0/settings')
     .then(function(response) {
-            console.log(response);
             $scope.settings_site = response.data.results[0];
         }, function(response) {
 
         });
     $scope.save_settings = function () {
+        // if($scope.settings_site.date_from)
+        // typeof($scope.settings_site.date_from);
+        // console.log(typeof($scope.settings_site.date_from));
+        // console.log($scope.settings_site.date_from);
+        if ($scope.settings_site.date_from.length === 0){
+            $scope.settings_site.date_from = null;
+        }
+
         $http.patch('api/v1.0/settings/1/', $scope.settings_site)
+        .then(function(response) {
+            $scope.alerts.push({msg: 'Saved!'});
+        }, function(response) {
+            $scope.alerts.push({msg: 'ERROR'});
+        });
+    };
+
+    $scope.alerts = [];
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
+
+    $http.get('api/v1.0/status')
+        .then(function(response) {
+            $scope.status = response.data.results;
+        }, function(response) {
+
+        });
+
+    $scope.site = {};
+
+    $scope.save_status = function () {
+        $http.patch('api/v1.0/status/save_all/', $scope.status)
+        .then(function(response) {
+            $scope.alerts.push({msg: 'Saved!'});
+        }, function(response) {
+            $scope.alerts.push({msg: 'ERROR'});
+        });
+    };
+
+    $scope.word_input = {
+        'word': ''
+    };
+
+    $http.get('api/v1.0/stopword')
+    .then(function(response) {
+            $scope.stopwords = response.data.results;
+        }, function(response) {
+
+        });
+
+    $scope.save_word = function () {
+        $http.post('api/v1.0/stopword/', $scope.word_input)
+        .then(function(response) {
+            $scope.stopwords.push(response.data);
+            $scope.word_input = {'word': ''}
+        }, function(response) {
+            $scope.alerts.push({msg: response.data.word});
+        });
+    };
+
+    $scope.delete_word = function (word) {
+        $http.delete('api/v1.0/stopword/' + word.id + '/')
+        .then(function(response) {
+            var index = $scope.stopwords.indexOf(word);
+            console.log(index);
+            delete $scope.stopwords.splice(index, 1);
+        }, function(response) {
+            $scope.alerts.push({msg: response.data.word});
+        });
     }
+
 });

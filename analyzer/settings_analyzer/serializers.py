@@ -1,16 +1,25 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from settings_analyzer.models import Settings
+from settings_analyzer.models import Settings, StatusSiteParse, StopWordList
 
 
 class SettingsSerializer(ModelSerializer):
-    # settings = serializers.SerializerMethodField()
 
     class Meta:
         model = Settings
-        # fields = '__all__'
         exclude = 'id',
 
-    # def get_settings(self, obj):
-    #     return True
+
+class StatusSerializer(ModelSerializer):
+
+    class Meta:
+        model = StatusSiteParse
+        fields = ('id', 'name', 'is_enable')
+
+
+class StopWordSerializer(ModelSerializer):
+
+    class Meta:
+        model = StopWordList
+        fields = ('id', 'word')

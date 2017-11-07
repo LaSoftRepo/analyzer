@@ -15,16 +15,13 @@ from django.utils.timezone import make_naive
 from collection.models import Collections, Donor
 from core import mixins
 from core.utils import validate_sms_phone
+from settings_analyzer.models import Settings, StatusSiteParse
+from settings_analyzer.validators import filter_parse
 from sms_sender.sender import SmsSender
 from users.models import User
 
 
 class ConfigParserOlx:
-    main_link = 'https://www.olx.ua/transport/legkovye-avtomobili/' \
-                'q-%D0%B4%D1%82%D0%BF/?' \
-                'search[filter_float_price%3Afrom]=25000&' \
-                'search[filter_float_price%3Ato]=125000&' \
-                'search[filter_float_motor_year%3Afrom]=1990'
 
     SELECTOR_GETLINK_ARTICLES = '//a[@class="marginright5 link linkWithHash detailsLink"]/@href'  # noqa
     SELECTOR_DATE = '//div[@class="offer-titlebox__details"]//em/text()'
@@ -36,6 +33,17 @@ class ConfigParserOlx:
     DESCRIPTION = '//div[@class="clr"]//p[@class="pding10 lheight20 large"]//text()'  # noqa
     PRICE = '//div[@class="price-label"]//strong/text()'
     NAME = '//div[@class="offer-user__details"]//h4//a//text()'
+
+    @property
+    def main_link(self):
+        year_from = Settings.get_solo().date_from or '1990'
+        if isinstance(year_from, datetime.datetime):
+            year_from = year_from.year
+        return f'https://www.olx.ua/transport/legkovye-avtomobili/' \
+               'q-%D0%B4%D1%82%D0%BF/?' \
+               'search[filter_float_price%3Afrom]=2500&' \
+               'search[filter_float_price%3Ato]=525000&' \
+               f'search[filter_float_motor_year%3Afrom]={year_from}'
 
 
 class Requester(object):
@@ -130,6 +138,9 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
             title = self._get_title(page_article)
 
             city = self._get_location(page_article)
+
+            if not filter_parse(title, description, price, currency):
+                continue
 
             collection = Collections.objects.create(
                 create_at=date_article,
