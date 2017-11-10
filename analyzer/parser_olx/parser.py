@@ -139,7 +139,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
             city = self._get_location(page_article)
 
-            if not filter_parse(title, description, price, currency):
+            if not filter_parse(title, description, price, currency, city):
                 continue
 
             collection = Collections.objects.create(
@@ -184,7 +184,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
         if price:
             return price, currency
         else:
-            return ''
+            return '', 'грн'
 
     def _get_description(self, article):
         description = ''.join(article.get_text(self.DESCRIPTION))

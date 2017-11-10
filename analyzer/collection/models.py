@@ -5,9 +5,11 @@ from django.contrib.postgres.fields import JSONField
 class Donor:
     OLX = 'olx'
     AUTORIA = 'auto.ria'
+    RST = 'rst.ua'
     SITE = (
         (OLX, 'olx'),
-        (AUTORIA, 'auto.ria')
+        (AUTORIA, 'auto.ria'),
+        (RST, 'rst.ua')
     )
 
 
