@@ -6,9 +6,10 @@ def filter_parse(title, description, price, currency, city=''):
         if stop in title or stop in description or stop in city:
             return False
 
-    if price.isnumeric():
+    if isinstance(price, str):
         price = int(price)
 
+    if isinstance(price, int):
         if currency == '$':
             price_usd_from = Settings.get_solo().price_usd_from
             price_usd_to = Settings.get_solo().price_usd_to
