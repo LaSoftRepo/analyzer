@@ -76,57 +76,58 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
         ids = Requester(self.main_link).get_ids_article()
         collections = Collections.objects.filter(
             donor=Donor.AUTORIA).values_list('id_donor', flat=True)
-        for id_article in ids:
-            if id_article in collections:
-                continue
+        if ids:
+            for id_article in ids:
+                if id_article in collections:
+                    continue
 
-            data_article = Requester(self.article_link(id_article)).get_json()
+                data_article = Requester(self.article_link(id_article)).get_json()
 
-            phones = [self._normailize_phone(data_article)]
-            dict_phones = {key: value for key, value in enumerate(phones)}
+                phones = [self._normailize_phone(data_article)]
+                dict_phones = {key: value for key, value in enumerate(phones)}
 
-            date_article = self._get_date_article(data_article)
-            if isinstance(date_article, bool):
-                continue
+                date_article = self._get_date_article(data_article)
+                if isinstance(date_article, bool):
+                    continue
 
-            city = data_article.get('locationCityName', '')
+                city = data_article.get('locationCityName', '')
 
-            description = data_article.get('autoData', {})\
-                .get('description', '')
-            title = data_article.get('title', '')
+                description = data_article.get('autoData', {})\
+                    .get('description', '')
+                title = data_article.get('title', '')
 
-            link = ''.join([self.link_site,
-                            data_article.get('linkToView', '')])
-            name = self._get_name(link)
+                link = ''.join([self.link_site,
+                                data_article.get('linkToView', '')])
+                name = self._get_name(link)
 
-            price = data_article.get('USD', '')
+                price = data_article.get('USD', '')
 
-            if not filter_parse(title, description, price, '$'):
-                continue
+                if not filter_parse(title, description, price, '$'):
+                    continue
 
-            collection = Collections.objects.create(
-                create_at=date_article,
-                donor=Donor.AUTORIA,
-                id_donor=id_article,
-                city=city,
-                title=title,
-                description=description,
-                link=link,
-                price=price,
-                currency='$',
-                phones=dict_phones,
-                name=name
-            )
+                collection = Collections.objects.create(
+                    create_at=date_article,
+                    donor=Donor.AUTORIA,
+                    id_donor=id_article,
+                    city=city,
+                    title=title,
+                    description=description,
+                    link=link,
+                    price=price,
+                    currency='$',
+                    phones=dict_phones,
+                    name=name
+                )
 
-            if collection.sms_is_send:
-                continue
+                if collection.sms_is_send:
+                    continue
 
-            sms_status = sms.send(validate_sms_phone(collection))
+                sms_status = sms.send(validate_sms_phone(collection))
 
-            if sms_status:
-                collection.sms_is_send = True
-                collection.save()
-                self.send_email_to_admin(collection)
+                if sms_status:
+                    collection.sms_is_send = True
+                    collection.save()
+                    self.send_email_to_admin(collection)
 
     @staticmethod
     def _get_name(link):
