@@ -70,6 +70,9 @@ class ClientSmsSender(mixins.EmailSenderMixin):
 
     def check_email(self):
         collections = Collections.objects.filter(sms_is_send=True,
-                                                 email_is_send=False)
+                                                 email_is_send=False,
+                                                 create_at__day__gte=10,
+                                                 create_at__month__gt=10
+                                                 ).order_by('create_at')
         for collection in collections:
             self.send_email_to_admin(collection)
