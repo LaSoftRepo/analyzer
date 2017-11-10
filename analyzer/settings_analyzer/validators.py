@@ -1,9 +1,9 @@
 from settings_analyzer.models import StopWordList, Settings
 
 
-def filter_parse(title, description, price, currency):
+def filter_parse(title, description, price, currency, city=''):
     for stop in StopWordList.objects.values_list('word', flat=True):
-        if stop in title or stop in description:
+        if stop in title or stop in description or stop in city:
             return False
 
     if price.isnumeric():
