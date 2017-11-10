@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from settings_analyzer.models import Settings, StatusSiteParse, StopWordList
 from settings_analyzer.serializers import SettingsSerializer, \
-    StatusSerializer, StopWordSerializer
+    StatusSerializer, StopWordSerializer, LargeResultsSetPagination
 
 
 class SettingsViewSet(viewsets.ModelViewSet):
@@ -32,6 +32,7 @@ class StatusViewSet(viewsets.ModelViewSet):
 
 class StopWordViewSet(viewsets.ModelViewSet):
     serializer_class = StopWordSerializer
+    pagination_class = LargeResultsSetPagination
     queryset = StopWordList.objects.all()
     filter_backends = (filters.OrderingFilter,)
     ordering = ('word',)
