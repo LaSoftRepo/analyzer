@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'sms_sender',
     'parser_ria',
     'settings_analyzer',
+    'parser_rst',
 ]
 
 MIDDLEWARE = [
