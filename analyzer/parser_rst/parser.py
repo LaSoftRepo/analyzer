@@ -66,10 +66,12 @@ class Requester(ConfigParserRst):
 class ParserRst(mixins.EmailSenderMixin):
 
     def start(self):
+        print('Start Parse RST')
         sms = SmsSender()
         for i in range(1, 8):
             list_link_articles = Requester(i).get_link('//a[@class="rst-ocb-i-a"]/@href')
             for article_link in list_link_articles:
+                print('Parse', article_link)
                 page_article = Requester(link=article_link)
 
                 id_article = self._get_id_article(page_article)

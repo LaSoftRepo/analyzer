@@ -72,6 +72,7 @@ class WrapperRiaApi:
 class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
 
     def start(self):
+        print('Start Parse Ria')
         sms = SmsSender()
         ids = Requester(self.main_link).get_ids_article()
         collections = Collections.objects.filter(
