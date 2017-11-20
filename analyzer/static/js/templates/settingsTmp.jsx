@@ -44,6 +44,22 @@ var settingsTmp =
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"> Текст SMS</label>
+                                <div class="col-sm-10">
+                                    <textarea name="" id="" cols="" rows="5" ng-model="settings_site.message_text">ss</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"> Вкл/выкл SMS</label>
+                                <div class="col-sm-10">
+                                    <input type="checkbox" value="{{settings_site.enable_disable_sms}}" class="custom-label" ng-checked="settings_site.enable_disable_sms" ng-model="settings_site.enable_disable_sms" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <button type="button" class="btn btn-primary btn-sm float-right" ng-click="save_settings()">Save</button>
                 </div>

@@ -9,7 +9,11 @@ from sms_sender.sender import ClientSmsSender
 
 
 def parse(r):
-    parser = ParserRst()
-    parser.start()
+    # parser = ParserRst()
+    # parser.start()
     # parser = ClientSmsSender()
+
+    parser = ParserRia()
+    parser.start()
+
     return HttpResponse()
