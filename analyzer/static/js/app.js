@@ -236,10 +236,6 @@ parserApp.controller("settingsAppController", function($scope, $location, $http,
 
         });
     $scope.save_settings = function () {
-        // if($scope.settings_site.date_from)
-        // typeof($scope.settings_site.date_from);
-        // console.log(typeof($scope.settings_site.date_from));
-        // console.log($scope.settings_site.date_from);
         if ($scope.settings_site.date_from.length === 0){
             $scope.settings_site.date_from = null;
         }

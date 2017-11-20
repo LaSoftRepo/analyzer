@@ -16,7 +16,6 @@ from sms_sender.sender import SmsSender
 
 
 class Requester(object):
-
     def __init__(self, link):
         self.link = link
         self.response = requests.get(self.link)
@@ -25,7 +24,7 @@ class Requester(object):
         return self.response.json()
 
     def get_ids_article(self):
-        return self.response.json().get('result', {}).get('search_result', {})\
+        return self.response.json().get('result', {}).get('search_result', {}) \
             .get('ids')
 
     def get_text(self, selector='//text()'):
@@ -49,8 +48,8 @@ class WrapperRiaApi:
         return f'{self.link}/search' \
                f'?api_key={self.api_key}' \
                '&category_id=1' \
-               f'&s_yers[0]={year_from}' \
-               f'&po_yers[0]={year_to}' \
+               f'&s_yers={year_from}' \
+               f'&po_yers={year_to}' \
                '&price_ot=100' \
                '&price_do=10000' \
                '&currency=1' \
@@ -68,9 +67,12 @@ class WrapperRiaApi:
     def article_link(self, id_article):
         return f'{self.link}/info?api_key={self.api_key}&auto_id={id_article}'
 
+    def author_link(self, user_id):
+        return f'https://auto.ria.com/blocks_search_ajax/search/' \
+               f'?user_id={user_id}'
+
 
 class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
-
     def start(self):
         print('Start Parse Ria')
         sms = SmsSender()
@@ -82,7 +84,15 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
                 if id_article in collections:
                     continue
 
-                data_article = Requester(self.article_link(id_article)).get_json()
+                data_article = Requester(
+                    self.article_link(id_article)).get_json()
+
+                all_author_articles = Requester(
+                    self.author_link(data_article.get('userId')))
+                if all_author_articles.response.status_code == 200:
+                    if len(all_author_articles.get_json().get('result').get(
+                            'search_result').get('ids')) > 1:
+                        continue
 
                 phones = [self._normailize_phone(data_article)]
                 dict_phones = {key: value for key, value in enumerate(phones)}
@@ -93,7 +103,7 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
 
                 city = data_article.get('locationCityName', '')
 
-                description = data_article.get('autoData', {})\
+                description = data_article.get('autoData', {}) \
                     .get('description', '')
                 title = data_article.get('title', '')
 
@@ -103,7 +113,7 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
 
                 price = data_article.get('USD', '')
 
-                if not filter_parse(title, description, price, '$'):
+                if not filter_parse(title, description, price, '$', city):
                     continue
 
                 collection = Collections.objects.create(

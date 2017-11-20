@@ -5,11 +5,13 @@ from zeep import Client
 from collection.models import Collections
 from core import mixins
 from core.utils import validate_sms_phone
+from settings_analyzer.models import Settings
 
 
 class SmsSender:
-    text = 'Готовы выкупить ваше авто, 90% рыночной стоимости, ' \
-           'деньги в день обращения. 0672323060, 0932714661'
+    # text = 'Готовы выкупить ваше авто, 90% рыночной стоимости, ' \
+    #        'деньги в день обращения. 0672323060, 0932714661'
+    text = Settings.get_solo().message_text
 
     def __init__(self):
         self.error_message = ''
@@ -21,13 +23,17 @@ class SmsSender:
         self.balance = self.get_balance()
 
     def send(self, phone):
-        if self.auth == 'Вы успешно авторизировались':
-            if float(self.balance):
-                return self._result(phone)
-            else:
-                self.error_message = f'Ваш баланс {self.balance}'
-        elif self.auth == 'Неверный логин или пароль':
-            self.error_message = 'Неверный логин или пароль'
+        enable_disable_sms = Settings.get_solo().enable_disable_sms
+        if enable_disable_sms:
+            if self.auth == 'Вы успешно авторизировались':
+                if float(self.balance):
+                    return self._result(phone)
+                else:
+                    self.error_message = f'Ваш баланс {self.balance}'
+            elif self.auth == 'Неверный логин или пароль':
+                self.error_message = 'Неверный логин или пароль'
+        else:
+            self.error_message = 'Смс отключено'
 
     def _result(self, phone):
         result = self.client.service.SendSMS(sender='Top Vykup',

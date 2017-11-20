@@ -9,6 +9,8 @@ class Settings(SingletonModel):
     price_hrn_to = models.IntegerField(blank=True, null=True)
     date_from = models.DateField(blank=True, null=True)
     date_to = models.DateField(blank=True, null=True)
+    message_text = models.TextField(blank=True, null=True)
+    enable_disable_sms = models.BooleanField(default=False)
 
 
 class StatusSiteParse(models.Model):
