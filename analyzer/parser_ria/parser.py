@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 # from urllib.parse import urljoin
 
 import requests
@@ -40,10 +40,10 @@ class WrapperRiaApi:
     @property
     def main_link(self):
         year_from = Settings.get_solo().date_from or '1990'
-        if isinstance(year_from, datetime):
+        if isinstance(year_from, date):
             year_from = year_from.year
         year_to = Settings.get_solo().date_to or '2017'
-        if isinstance(year_to, datetime):
+        if isinstance(year_to, date):
             year_to = year_to.year
         return f'{self.link}/search' \
                f'?api_key={self.api_key}' \

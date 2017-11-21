@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'parser_ria',
     'settings_analyzer',
     'parser_rst',
+    'parser_icar',
 ]
 
 MIDDLEWARE = [
