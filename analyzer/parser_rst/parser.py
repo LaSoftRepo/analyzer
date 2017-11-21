@@ -8,6 +8,7 @@ from lxml import html
 
 from collection.models import Collections, Donor
 from core.utils import validate_sms_phone
+from settings_analyzer.models import Settings
 from settings_analyzer.validators import filter_parse
 from sms_sender.sender import SmsSender
 from core import mixins
@@ -46,6 +47,15 @@ class Requester(ConfigParserRst):
         else:
             self.link = link
             self.parameter = {}
+
+        year_from = Settings.get_solo().date_from or '1990'
+        if isinstance(year_from, datetime.date):
+            year_from = year_from.year
+        year_to = Settings.get_solo().date_to or '2017'
+        if isinstance(year_to, datetime.date):
+            year_to = year_to.year
+        self.parameter['year[]'][0] = year_from
+        self.parameter['year[]'][1] = year_to
         self.response = requests.get(self.link, params=self.parameter, headers=self.headers)
         # print(self.response.content)
         self.parsed_body = html.fromstring(self.response.text)
@@ -224,7 +234,7 @@ class ParserRst(mixins.EmailSenderMixin):
 
 
 
-
-if __name__ == '__main__':
-    start = ParserRst()
-    start.start()
+#
+# if __name__ == '__main__':
+#     start = ParserRst()
+#     start.start()

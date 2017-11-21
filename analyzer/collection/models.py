@@ -6,10 +6,12 @@ class Donor:
     OLX = 'olx'
     AUTORIA = 'auto.ria'
     RST = 'rst.ua'
+    ICAR = 'avtobazar.infocar.ua'
     SITE = (
         (OLX, 'olx'),
         (AUTORIA, 'auto.ria'),
-        (RST, 'rst.ua')
+        (RST, 'rst.ua'),
+        (ICAR, 'avtobazar.infocar.ua')
     )
 
 

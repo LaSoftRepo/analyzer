@@ -37,7 +37,7 @@ class ConfigParserOlx:
     @property
     def main_link(self):
         year_from = Settings.get_solo().date_from or '1990'
-        if isinstance(year_from, datetime.datetime):
+        if isinstance(year_from, datetime.date):
             year_from = year_from.year
         return f'https://www.olx.ua/transport/legkovye-avtomobili/' \
                'q-%D0%B4%D1%82%D0%BF/?' \
