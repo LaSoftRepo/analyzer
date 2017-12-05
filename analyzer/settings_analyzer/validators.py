@@ -6,7 +6,7 @@ def filter_parse(title, description, price, currency, city=''):
         if stop in title or stop in description or stop in city:
             return False
 
-    if isinstance(price, str):
+    if price and isinstance(price, str):
         price = int(price)
 
     if isinstance(price, int):
