@@ -67,7 +67,8 @@ class ClientSmsSender(mixins.EmailSenderMixin):
         self.check_email()
         for collection in self.collections:
             phone = validate_sms_phone(collection)
-            if phone:
+            never_send = collection.phones.get('error')
+            if never_send != 'Смс отключено' and phone:
                 sms_status = self.sms.send(phone)
                 if sms_status:
                     error = collection.phones.get('error')
