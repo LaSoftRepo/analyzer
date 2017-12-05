@@ -129,7 +129,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
             price, currency = self._get_price(page_article)
 
             phones = self._get_phone(page_article, id_article)
-            dict_phones = {key:value for key, value in enumerate(phones)}
+            dict_phones = {key: value for key, value in enumerate(phones)}
 
             name = self._get_name(page_article)
 
@@ -264,7 +264,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
     def _get_phone(self, page_article, id_article):
         phone_token = self._get_phone_token(page_article)
         if not phone_token:
-            return None
+            return []
 
         path = ''.join((self.SITE_URL, self.AJAX_PHONE,
                         id_article[2:], '/?pt=', phone_token))
