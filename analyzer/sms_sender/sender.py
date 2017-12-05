@@ -84,7 +84,7 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                     self.send_email_to_admin(collection)
                 else:
                     collection.phones['error'] = sms.error_message
-                collection.save()
+            collection.save()
 
     def check_email(self):
         collections = Collections.objects.filter(sms_is_send=True,
