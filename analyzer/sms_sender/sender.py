@@ -59,17 +59,23 @@ class ClientSmsSender(mixins.EmailSenderMixin):
     def __init__(self):
         super().__init__()
         self.collections = Collections.objects.filter(sms_is_send=False,
-                                                      create_at__day__gte=10,
-                                                      create_at__month__gt=10).order_by('create_at')
-        self.sms = SmsSender()
+                                                      create_at__day__gte=4,
+                                                      create_at__month__gt=11).order_by('create_at')
+        # self.sms = SmsSender()
 
     def start(self):
+        sms = SmsSender()
         self.check_email()
         for collection in self.collections:
+
+            sms_enable = Settings.get_solo().enable_disable_sms
+            if not sms_enable:
+                collection.phones['error'] = 'Смс отключено'
+
             phone = validate_sms_phone(collection)
             never_send = collection.phones.get('error')
             if never_send != 'Смс отключено' and phone:
-                sms_status = self.sms.send(phone)
+                sms_status = sms.send(phone)
                 if sms_status:
                     error = collection.phones.get('error')
                     if error:
@@ -77,7 +83,7 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                     collection.sms_is_send = True
                     self.send_email_to_admin(collection)
                 else:
-                    collection.phones['error'] = self.sms.error_message
+                    collection.phones['error'] = sms.error_message
                 collection.save()
 
     def check_email(self):
