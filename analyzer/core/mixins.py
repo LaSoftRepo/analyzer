@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
@@ -25,7 +26,7 @@ class EmailSenderMixin:
             status = send_mail(
                 subject='Новая заявка — ads.topvykup.com.ua',
                 message=message,
-                from_email='analyzer@ads.topvykup.com.ua',
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=self.emails_admin,
                 fail_silently=False,
                 html_message=message
