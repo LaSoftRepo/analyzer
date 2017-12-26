@@ -155,12 +155,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST = 'mail.adm.tools'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'parser@topvykup.com.ua'
+EMAIL_HOST_PASSWORD = 'KA8hY4dLfv94'
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'Analyzer <info@ads.topvykup.com.ua>'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'info@ads.topvykup.com.ua'
 
 REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS':
