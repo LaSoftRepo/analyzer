@@ -15,6 +15,7 @@ class SmsSender:
 
     def __init__(self):
         self.error_message = ''
+        self.never_send = False
         self.msg_status = ''
         self.msg_id = ''
         self.client = Client('http://turbosms.in.ua/api/wsdl.html')
@@ -33,7 +34,7 @@ class SmsSender:
             elif self.auth == 'Неверный логин или пароль':
                 self.error_message = 'Неверный логин или пароль'
         else:
-            self.error_message = 'Смс отключено'
+            self.never_send = True
 
     def _result(self, phone):
         result = self.client.service.SendSMS(sender='Top Vykup',
@@ -73,8 +74,8 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                 collection.phones['error'] = 'Смс отключено'
 
             phone = validate_sms_phone(collection)
-            never_send = collection.phones.get('error')
-            if never_send != 'Смс отключено' and phone:
+            never_send = collection.phones.get('never_send')
+            if not never_send and phone:
                 sms_status = sms.send(phone)
                 if sms_status:
                     error = collection.phones.get('error')
@@ -84,6 +85,7 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                     self.send_email_to_admin(collection)
                 else:
                     collection.phones['error'] = sms.error_message
+                    collection.phones['never_send'] = sms.never_send
             collection.save()
 
     def check_email(self):
