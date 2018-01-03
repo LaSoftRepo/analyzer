@@ -72,8 +72,11 @@ class ClientSmsSender(mixins.EmailSenderMixin):
             sms_enable = Settings.get_solo().enable_disable_sms
             if not sms_enable:
                 collection.phones['error'] = 'Смс отключено'
+                collection.phones['never_send'] = True
+                collection.save()
 
             phone = validate_sms_phone(collection)
+
             never_send = collection.phones.get('never_send')
             if not never_send and phone:
                 sms_status = sms.send(phone)
@@ -85,7 +88,6 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                     self.send_email_to_admin(collection)
                 else:
                     collection.phones['error'] = sms.error_message
-                    collection.phones['never_send'] = sms.never_send
             collection.save()
 
     def check_email(self):
