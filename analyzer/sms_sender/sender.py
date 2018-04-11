@@ -60,8 +60,8 @@ class ClientSmsSender(mixins.EmailSenderMixin):
     def __init__(self):
         super().__init__()
         self.collections = Collections.objects.filter(sms_is_send=False,
-                                                      create_at__day__gte=4,
-                                                      create_at__month__gt=11).order_by('create_at')
+                                                      create_at__day__gte=10,
+                                                      create_at__month__gte=4).order_by('create_at')
         # self.sms = SmsSender()
 
     def start(self):
