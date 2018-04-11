@@ -141,30 +141,33 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
             if not filter_parse(title, description, price, currency, city):
                 continue
+            try:
+                collection = Collections.objects.create(
+                    create_at=date_article,
+                    donor=Donor.OLX,
+                    id_donor=id_in_site,
+                    city=city,
+                    title=title,
+                    description=description,
+                    link=article_url,
+                    price=price,
+                    currency=currency,
+                    phones=dict_phones,
+                    name=name
+                )
+            except ValueError as e:
+                print(str(e))
+            else:
+                if collection.sms_is_send:
+                    continue
 
-            collection = Collections.objects.create(
-                create_at=date_article,
-                donor=Donor.OLX,
-                id_donor=id_in_site,
-                city=city,
-                title=title,
-                description=description,
-                link=article_url,
-                price=price,
-                currency=currency,
-                phones=dict_phones,
-                name=name
-            )
+                sms_status = sms.send(validate_sms_phone(collection))
 
-            if collection.sms_is_send:
-                continue
+                if sms_status:
+                    collection.sms_is_send = True
+                    collection.save()
+                    self.send_email_to_admin(collection)
 
-            sms_status = sms.send(validate_sms_phone(collection))
-
-            if sms_status:
-                collection.sms_is_send = True
-                collection.save()
-                self.send_email_to_admin(collection)
 
     def _get_name(self, article):
         name = ''.join(article.get_text(self.NAME))

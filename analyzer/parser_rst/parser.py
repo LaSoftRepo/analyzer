@@ -19,7 +19,7 @@ class ConfigParserRst:
     parameter = {
         'task': 'newresults',
         'make[]': 0,
-        'year[]': [1991, 2017],
+        'year[]': [1991, 2018],
         'price[]': [1000, 5000],
         'engine[]': [0, 0],
         'gear': 0,
@@ -41,21 +41,25 @@ class ConfigParserRst:
 
 class Requester(ConfigParserRst):
     def __init__(self, page=1, link=None):
+
         self.parameter['start'] = page
+
         if not link:
             self.link = self.main_link
         else:
             self.link = link
-            self.parameter = {}
+            self.parameter = {
+                'year[]': [1991, 2018],
+            }
 
         year_from = Settings.get_solo().date_from or '1990'
         if isinstance(year_from, datetime.date):
             year_from = year_from.year
+            self.parameter['year[]'][0] = year_from
         year_to = Settings.get_solo().date_to or '2017'
         if isinstance(year_to, datetime.date):
             year_to = year_to.year
-        self.parameter['year[]'][0] = year_from
-        self.parameter['year[]'][1] = year_to
+            self.parameter['year[]'][1] = year_to
         self.response = requests.get(self.link, params=self.parameter, headers=self.headers)
         # print(self.response.content)
         self.parsed_body = html.fromstring(self.response.text)
