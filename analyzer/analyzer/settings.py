@@ -161,7 +161,7 @@ EMAIL_HOST_USER = 'parser@topvykup.com.ua'
 EMAIL_HOST_PASSWORD = 'KA8hY4dLfv94'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'info@ads.topvykup.com.ua'
+DEFAULT_FROM_EMAIL = 'parser@topvykup.com.ua'
 
 REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS':

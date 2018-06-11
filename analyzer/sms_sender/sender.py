@@ -20,7 +20,7 @@ class SmsSender:
         self.msg_id = ''
         self.client = Client('http://turbosms.in.ua/api/wsdl.html')
         self.auth = self.client.service.Auth(login='analyzer',
-                                             password='analyzer99')
+                                             password='eX10i#FO#@4J')
         self.balance = self.get_balance()
 
     def send(self, phone):
