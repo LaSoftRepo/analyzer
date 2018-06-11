@@ -109,6 +109,7 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
 
     def parse_pages(self):
         sms = SmsSender()
+        sms_enable = Settings.get_solo().enable_disable_sms
         for article_url in self._get_list_article():
 
             page_article = Requester(article_url)
@@ -161,12 +162,15 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
                 if collection.sms_is_send:
                     continue
 
-                sms_status = sms.send(validate_sms_phone(collection))
-
-                if sms_status:
-                    collection.sms_is_send = True
+                if sms_enable:
+                    collection.never_send = False
                     collection.save()
-                    self.send_email_to_admin(collection)
+                    sms_status = sms.send(validate_sms_phone(collection))
+
+                    if sms_status:
+                        collection.sms_is_send = True
+                        collection.save()
+                        self.send_email_to_admin(collection)
 
 
     def _get_name(self, article):

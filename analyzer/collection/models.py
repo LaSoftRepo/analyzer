@@ -20,6 +20,7 @@ class Collections(models.Model):
         auto_created=True,
         verbose_name='Create date/time'
     )
+    never_send = models.BooleanField(default=True)
     donor = models.CharField(
         max_length=50,
         verbose_name='Site donor',

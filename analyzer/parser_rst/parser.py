@@ -82,6 +82,7 @@ class ParserRst(mixins.EmailSenderMixin):
     def start(self):
         print('Start Parse RST')
         sms = SmsSender()
+        sms_enable = Settings.get_solo().enable_disable_sms
         for i in range(1, 8):
             list_link_articles = Requester(i).get_link('//a[@class="rst-ocb-i-a"]/@href')
             for article_link in list_link_articles:
@@ -132,12 +133,15 @@ class ParserRst(mixins.EmailSenderMixin):
                 if collection.sms_is_send:
                     continue
 
-                sms_status = sms.send(validate_sms_phone(collection))
-
-                if sms_status:
-                    collection.sms_is_send = True
+                if sms_enable:
+                    collection.never_send = False
                     collection.save()
-                    self.send_email_to_admin(collection)
+                    sms_status = sms.send(validate_sms_phone(collection))
+
+                    if sms_status:
+                        collection.sms_is_send = True
+                        collection.save()
+                        self.send_email_to_admin(collection)
 
     @property
     def stop_day(self):
