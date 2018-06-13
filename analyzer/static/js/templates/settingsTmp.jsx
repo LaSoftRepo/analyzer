@@ -60,6 +60,16 @@ var settingsTmp =
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                    <br>
+                                    <input type="radio" name="group1" ng-model="send_immediately.state" ng-value="send_immediately.state" ng-click="saveEmailSettings(send_immediately)" />Send Email immediately<br>
+                                    <input type="radio" name="group1" ng-model="send_after_sms.state" ng-value="send_after_sms.state" ng-click="saveEmailSettings(send_after_sms)" />Send Email after SMS<br>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <button type="button" class="btn btn-primary btn-sm float-right" ng-click="save_settings()">Save</button>
                 </div>

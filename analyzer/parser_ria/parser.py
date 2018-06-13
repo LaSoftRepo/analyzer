@@ -77,6 +77,7 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
         print('Start Parse Ria')
         sms = SmsSender()
         sms_enable = Settings.get_solo().enable_disable_sms
+        email_enable = Settings.get_solo().enable_disable_email
         ids = Requester(self.main_link).get_ids_article()
         collections = Collections.objects.filter(
             donor=Donor.AUTORIA).values_list('id_donor', flat=True)
@@ -134,6 +135,9 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
                 if collection.sms_is_send:
                     continue
 
+                if not email_enable:
+                    self.send_email_to_admin(collection)
+
                 if sms_enable:
                     collection.never_send = False
                     collection.save()
@@ -142,7 +146,8 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
                     if sms_status:
                         collection.sms_is_send = True
                         collection.save()
-                        self.send_email_to_admin(collection)
+                        if email_enable:
+                            self.send_email_to_admin(collection)
 
     @staticmethod
     def _get_name(link):

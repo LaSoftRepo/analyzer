@@ -229,9 +229,24 @@ parserApp.controller("settingsAppController", function($scope, $location, $http,
         todayHighlight: true,
         format: "yyyy-mm-dd"
     });
+
+    $scope.send_immediately = {
+        name: 'send_immediately',
+        state: false
+    };
+    $scope.send_after_sms = {
+        name: 'send_after_sms',
+        state: false
+    };
+
     $http.get('api/v1.0/settings')
     .then(function(response) {
             $scope.settings_site = response.data.results[0];
+            if (!$scope.settings_site.enable_disable_email){
+                $scope.send_immediately.state = true;
+            } else {
+                $scope.send_after_sms.state = true;
+            }
         }, function(response) {
 
         });
@@ -239,6 +254,8 @@ parserApp.controller("settingsAppController", function($scope, $location, $http,
         if ($scope.settings_site.date_from.length === 0){
             $scope.settings_site.date_from = null;
         }
+        console.log($scope.settings_site.enable_disable_email);
+
 
         $http.patch('api/v1.0/settings/1/', $scope.settings_site)
         .then(function(response) {
@@ -246,6 +263,15 @@ parserApp.controller("settingsAppController", function($scope, $location, $http,
         }, function(response) {
             $scope.alerts.push({msg: 'ERROR'});
         });
+    };
+
+    $scope.saveEmailSettings = function(setting) {
+        if (setting.name === 'send_immediately'){
+            $scope.settings_site.enable_disable_email = false;
+        }else if (setting.name === 'send_after_sms'){
+            $scope.settings_site.enable_disable_email = true;
+        }
+
     };
 
     $scope.alerts = [];

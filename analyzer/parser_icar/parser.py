@@ -96,6 +96,7 @@ class ParserIcar(mixins.EmailSenderMixin):
         print('Start Parse ICAR')
         sms = SmsSender()
         sms_enable = Settings.get_solo().enable_disable_sms
+        email_enable = Settings.get_solo().enable_disable_email
         list_link = Requester().get_link(
             '//div[@class="car"]/div[@class="h"]/a/@href')
         for link_article in list_link:
@@ -144,6 +145,9 @@ class ParserIcar(mixins.EmailSenderMixin):
             if collection.sms_is_send:
                 continue
 
+            if not email_enable:
+                self.send_email_to_admin(collection)
+
             if sms_enable:
                 collection.never_send = False
                 collection.save()
@@ -152,7 +156,8 @@ class ParserIcar(mixins.EmailSenderMixin):
                 if sms_status:
                     collection.sms_is_send = True
                     collection.save()
-                    self.send_email_to_admin(collection)
+                    if email_enable:
+                        self.send_email_to_admin(collection)
 
     def _get_location(self, page):
         data = page.get_text('//div[@id="where"]/a')

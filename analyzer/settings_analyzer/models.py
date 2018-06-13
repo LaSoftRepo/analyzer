@@ -10,6 +10,7 @@ class Settings(SingletonModel):
     date_from = models.DateField(blank=True, null=True)
     date_to = models.DateField(blank=True, null=True)
     message_text = models.TextField(blank=True, null=True)
+    enable_disable_email = models.BooleanField(default=False)
     enable_disable_sms = models.BooleanField(default=False)
 
 
