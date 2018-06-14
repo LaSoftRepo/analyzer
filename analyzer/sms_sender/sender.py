@@ -84,7 +84,8 @@ class ClientSmsSender(mixins.EmailSenderMixin):
                     collection.sms_is_send = True
 
                     if self.email_enable:
-                        self.send_email_to_admin(collection)
+                        if not collection.email_is_send:
+                            self.send_email_to_admin(collection)
 
                 else:
                     collection.phones['error'] = sms.error_message
