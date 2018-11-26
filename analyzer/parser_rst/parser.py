@@ -128,7 +128,8 @@ class ParserRst(mixins.EmailSenderMixin):
                     price=price,
                     currency=currency,
                     phones=dict_phones,
-                    name=name
+                    name=name,
+                    never_send=False
                 )
 
                 if collection.sms_is_send:

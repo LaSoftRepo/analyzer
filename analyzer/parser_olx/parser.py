@@ -155,7 +155,8 @@ class ParserOlx(mixins.EmailSenderMixin, ConfigParserOlx):
                     price=price,
                     currency=currency,
                     phones=dict_phones,
-                    name=name
+                    name=name,
+                    never_send=False
                 )
             except ValueError as e:
                 print(str(e))

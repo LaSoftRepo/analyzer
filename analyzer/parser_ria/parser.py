@@ -129,7 +129,8 @@ class ParserRia(mixins.EmailSenderMixin, WrapperRiaApi):
                     price=price,
                     currency='$',
                     phones=dict_phones,
-                    name=name
+                    name=name,
+                    never_send=False
                 )
 
                 if collection.sms_is_send:
